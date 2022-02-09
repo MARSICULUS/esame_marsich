@@ -96,42 +96,71 @@ class CSVFile:
         all_data = []
 
         #Prendo tutte le righe e le metto nella lista
-        for i, line in enumerate(my_file):
-                #divido la riga per ogni colonna
-                l = line.strip('\n')
-                l = l.split(',')
-                #salvo la linea
+        for i, line in enumerate(my_file):            
+            #divido la riga per ogni colonna
+            l = line.strip('\n')
+            l = l.split(',')
+            #salvo la linea
+            if l[0] != '':
                 all_data.append(l)
 
         my_file.close()
 
         return all_data
 
-class CSVTimeSeriesFile(CSVFIle, nome_file):
+class CSVTimeSeriesFile(CSVFile):
     #cosa deve fare
+
+    #devo alzare eccesioni quando: (funzione)
+    #quando la serie temporale non è ordinata o ci sono dei doppioni
+
+    #gestione errori
+    #un valore intero o non positivo non va considerato
+    #linee incomplete
+    #testo
+
+    
 
     #prende il get data del super
     #converte le prime due colonnne in numeri e li aggiunge in una nuova lista
     #    (le colonne dopo non mi innteressano)
+    def get_data(self):
+        old_data = super().get_data()
+        print(old_data)
 
-    old_data = super().get_data(nome_file)
-    floaty_data = []
-
-    for lista in old_data:
-        for i, item in enumerate(lista):
-            linea = []
-            if i === 0:
-                linea.append(item)
-                try:
-                    floaty_item = float(item)
-                    floaty_data.append(floaty_item)
-                    
+        floaty_data = []
     
+        for lista in old_data:
+            linea = []
+            for i, item in enumerate(lista):
+                if i == 0:
+                    linea.append(item)
+                if i == 1:
+                    try:
+                        floaty_item = int(item)
+                        if floaty_item < 0:
+                            raise Exception
+                        linea.append(floaty_item)
+                    except:
+                        linea.append(None)
 
-#================
+            if linea[0] == 'date':
+                pass
+            else:
+                floaty_data.append(linea)
+                        
+        return floaty_data
+
+    def __time_check(self, lista):
+
+        #considero solo le date (le righe con None o testo non vanno considerate)
+
+        #le di
+
+#====================
 # CORPO DEL PROGRAMMA
 #====================
 
-file = CSVFile('shampoo_sales.csv')
+file = CSVTimeSeriesFile('shampoo_sales.csv')
 print(file)
 print(file.get_data())
