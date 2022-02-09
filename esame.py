@@ -222,6 +222,22 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
     
     print(data)
 
+
+    difference_year = last_year - first_year
+    result = [0,0,0,0,0,0,0,0,0,0,0,0]
+
+    for item in data:
+        if item[0] >= first_year and item[0] <= last_year:
+            if item[2] != None:
+                result[item[1] - 1] = result[item[1] - 1] + item[2]
+
+
+    for lol in result:
+        if lol != 0 and difference_year != 0:
+            lol = lol / difference_year
+
+
+    return result
     #dovrei avere una lista come la volgio io (ci sono dei null nei dati dei passeggieri)
 
     #faccio un altra funzione per cercare il dato dei passeggieri dato un anno e un giorno
@@ -240,6 +256,5 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
 #====================
 
 file = CSVTimeSeriesFile('shampoo_sales.csv')
-print(file)
 #print(file.get_data())
 print(compute_avg_monthly_difference(file.get_data(), '1949', '1950'))
