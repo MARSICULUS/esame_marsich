@@ -96,7 +96,7 @@ class CSVFile:
         all_data = []
 
         #Prendo tutte le righe e le metto nella lista
-        for i, line in enumerate(my_file):            
+        for line in my_file:            
             #divido la riga per ogni colonna
             l = line.strip('\n')
             l = l.split(',')
@@ -148,14 +148,50 @@ class CSVTimeSeriesFile(CSVFile):
                 pass
             else:
                 floaty_data.append(linea)
+
+        if not self.__time_check__(floaty_data):
+            raise ExamException('Errore: ordine temporale sbagliato')
                         
         return floaty_data
 
-    def __time_check(self, lista):
+    def __time_check__(self, dati):
+
+        tutto_a_posto = True
 
         #considero solo le date (le righe con None o testo non vanno considerate)
+        only_date =[]
+        for lista in dati:
+            only_date.append(lista[0])
 
-        #le di
+        right_data = []
+        for item in only_date:
+            try:
+                l = item.split('-')
+                if len(l) != 2:
+                    raise Exception
+                l[0] = int(l[0])
+                l[1] = int(l[1])
+                right_data.append(l)
+            except:
+                pass
+
+        mese = 1
+        anno = right_data[0][0]
+        for item in right_data:
+            if item[0] != anno:
+                tutto_a_posto = False
+            if item[1] != mese:
+                tutto_a_posto = False
+            if mese == 12:
+                mese = 1
+                anno = anno + 1
+            else:
+                mese = mese + 1
+
+        return tutto_a_posto
+
+        #le divido con le -
+        #faccio un ciclo dei mesi arrivato 
 
 #====================
 # CORPO DEL PROGRAMMA
