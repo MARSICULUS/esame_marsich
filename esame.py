@@ -126,7 +126,6 @@ class CSVTimeSeriesFile(CSVFile):
     #    (le colonne dopo non mi innteressano)
     def get_data(self):
         old_data = super().get_data()
-        print(old_data)
 
         floaty_data = []
     
@@ -190,9 +189,27 @@ class CSVTimeSeriesFile(CSVFile):
 
         return tutto_a_posto
 
-        #le divido con le -
-        #faccio un ciclo dei mesi arrivato 
+def compute_avg_monthly_difference(time_series, first_year, last_year):
 
+    #potrei fare almeno il time check
+    #e qualche altro check
+    
+    #prima considero gli anni giusti
+        #converto i get data in [anno, mese, passegieri]
+
+    #dovrei avere una lista come la volgio io (ci sono dei null nei dati dei passeggieri)
+
+    #faccio un altra funzione per cercare il dato dei passeggieri dato un anno e un giorno
+
+    #faccio un ciclo for che va da 0 a 11
+    #ogni ciclo dato il mese si trovano tutti i mesi e si sommano
+    
+    only_passengers =[]
+
+    for item in time_series:
+        only_passengers.append
+    
+    
 #====================
 # CORPO DEL PROGRAMMA
 #====================
