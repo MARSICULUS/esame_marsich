@@ -239,11 +239,9 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
     for i in range(12):
         for j, item in enumerate(nice_data):
             if j + 1 < difference_year:
-                result[i] = result [i] + abs(item[i] - nice_data[j + 1][i])
+                if item[i] != None and nice_data[j + 1][i] != None:
+                    result[i] = result [i] + abs(item[i] - nice_data[j + 1][i])
 
-
-    
-    print(result)
             
     real_result = []
 
@@ -253,9 +251,6 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
         else:
             real_result.append(item)
         
-
-    print('-------')
-    print(real_result)
     
     '''
     for i, item in enuemrate(data):
@@ -285,7 +280,7 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
             real_result.append(item)
 
 '''
-    return None
+    return real_result
     #dovrei avere una lista come la volgio io (ci sono dei null nei dati dei passeggieri)
 
     #faccio un altra funzione per cercare il dato dei passeggieri dato un anno e un giorno
@@ -306,3 +301,27 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
 file = CSVTimeSeriesFile('shampoo_sales.csv')
 #print(file.get_data())
 print(compute_avg_monthly_difference(file.get_data(), '1954', '1958'))
+
+
+#cose ancora da fare:
+'''
+Lasciarsi temmpo per consegnarsi
+
+commenti almeno i titoli e descrizioni delle funzioni
+
+difference year = 0
+
+difference year reverse
+
+altri check nella funzione
+
+se consideriamo un intervallo di due anni, per il mese con la misurazione mancante verrà tornato come valore finale 0;
+
+se consideriamo un intervallo di più di due anni e per un mese abbiamo meno di due misurazioni, verrà tornato 0 come valore finale per quel mese;
+
+se consideriamo un intervallo di più di due anni, calcoliamo la differenza media tra le misurazioni di quel mese per gli altri anni, ignorando la misurazione mancante.
+
+intervalli di tempo validi
+
+La classe CSVTimeSeriesFile controlla l’esistenza del file solo quando viene chiamato il metodo get_data() e, nel caso il file non esista o non sia leggibile, alza un'eccezione.
+'''
