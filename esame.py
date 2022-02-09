@@ -193,9 +193,34 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
 
     #potrei fare almeno il time check
     #e qualche altro check
+
+    try:
+        first_year = int(first_year)
+        last_year = int(last_year)
+    except:
+        raise ExamException('errore: le date non sono del tipo giusto')
+
+    if last_year < first_year:
+        raise ExamException('Errore:  non si può tornare indietro nel tempo')
     
     #prima considero gli anni giusti
         #converto i get data in [anno, mese, passegieri]
+
+    modified_data = []
+    for item in time_series:
+        l = item[0].split('-')
+        l.append(item[1])
+        modified_data.append(l)
+
+    data = []
+    for item in modified_data:
+        linea = []
+        for i in range(2):
+            linea.append(int(item[i]))
+        linea.append(item[2])
+        data.append(linea)
+    
+    print(data)
 
     #dovrei avere una lista come la volgio io (ci sono dei null nei dati dei passeggieri)
 
@@ -204,10 +229,10 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
     #faccio un ciclo for che va da 0 a 11
     #ogni ciclo dato il mese si trovano tutti i mesi e si sommano
     
-    only_passengers =[]
+    #only_passengers =[]
 
-    for item in time_series:
-        only_passengers.append
+    #for item in time_series:
+     #   only_passengers.append
     
     
 #====================
@@ -216,4 +241,5 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
 
 file = CSVTimeSeriesFile('shampoo_sales.csv')
 print(file)
-print(file.get_data())
+#print(file.get_data())
+print(compute_avg_monthly_difference(file.get_data(), '1949', '1950'))
