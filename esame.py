@@ -1,9 +1,6 @@
 class ExamException(Exception):
     pass
 
-class FileVuoto(Exception):
-    pass
-
 """ 
 Classe CSVFile
 Serve per leggere una classe CSV file
@@ -110,7 +107,26 @@ class CSVFile:
 
         return all_data
 
-class CSVTimeSeriesFile(CSVFIle)
+class CSVTimeSeriesFile(CSVFIle, nome_file):
+    #cosa deve fare
+
+    #prende il get data del super
+    #converte le prime due colonnne in numeri e li aggiunge in una nuova lista
+    #    (le colonne dopo non mi innteressano)
+
+    old_data = super().get_data(nome_file)
+    floaty_data = []
+
+    for lista in old_data:
+        for i, item in enumerate(lista):
+            linea = []
+            if i === 0:
+                linea.append(item)
+                try:
+                    floaty_item = float(item)
+                    floaty_data.append(floaty_item)
+                    
+    
 
 #================
 # CORPO DEL PROGRAMMA
