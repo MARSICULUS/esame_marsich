@@ -1,24 +1,6 @@
 class ExamException(Exception):
     pass
 
-""" 
-Classe CSVFile
-Serve per leggere una classe CSV file
-
----attributi---
-self.name -> nome del file
-
----metodi---
-__init__
-    inizializza tutte gli attributi
-
-__str__
-    rappresentazione del file
-    titolo, intestazione e numero di righe
-
-get_data
-    ritorna una lista di liste, le liste più piccole contengono le righe nelle quali ogni elemento rappresenta una colonna
-"""
 class CSVFile:
 
     #Inizializzazione
@@ -77,19 +59,6 @@ class CSVFile:
         return all_data
 
 class CSVTimeSeriesFile(CSVFile):
-    #devo alzare eccesioni quando: (funzione)
-    #quando la serie temporale non è ordinata o ci sono dei doppioni
-
-    #gestione errori
-    #un valore intero o non positivo non va considerato
-    #linee incomplete
-    #testo
-
-    
-
-    #prende il get data del super
-    #converte le prime due colonnne in numeri e li aggiunge in una nuova lista
-    #    (le colonne dopo non mi innteressano)
 
     #Lista di liste formata da coppia data-intero
     def get_data(self):
@@ -119,8 +88,8 @@ class CSVTimeSeriesFile(CSVFile):
                 else:
                     floaty_data.append(linea)
 
-        #if not self.__time_check__(floaty_data):
-        #    raise ExamException('Errore: ordine temporale sbagliato')
+        if not self.__time_check__(floaty_data):
+            raise ExamException('Errore: ordine temporale sbagliato')
                         
         return floaty_data
 
@@ -198,8 +167,7 @@ class CSVTimeSeriesFile(CSVFile):
 
 def compute_avg_monthly_difference(time_series, first_year, last_year):
 
-    #potrei fare almeno il time check
-    #e qualche altro check
+
     if not isinstance(first_year, str) or not isinstance(first_year, str):
         raise ExamException('Errore: le date inserite non sono stringhe')
 
@@ -208,13 +176,11 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
         first_year = int(first_year)
         last_year = int(last_year)
     except:
-        raise ExamException('errore: le date non sono del tipo giusto')
+        raise ExamException('Errore: le date non sono del tipo giusto')
 
     if last_year < first_year:
         raise ExamException('Errore:  non si può tornare indietro nel tempo')
     
-    #prima considero gli anni giusti
-        #converto i get data in [anno, mese, passegieri]
 
     modified_data = []
     for item in time_series:
@@ -223,7 +189,6 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
             l.append(item[1])
             modified_data.append(l)
 
-    
     data = []
     for item in modified_data:
         linea = []
@@ -253,15 +218,18 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
                 mese.append(item[2])
         passeggieri.append(mese)
 
+    
     difference_year = last_year - first_year + 1
     result = [0,0,0,0,0,0,0,0,0,0,0,0]    
 
     for i, mesi in enumerate(passeggieri):
         diff = 0
+
         for j in range(len(mesi) - 1):
             diff = diff + abs(mesi[j] - mesi[j + 1])
         result[i] = diff
     
+            
     real_result = []
 
     for item in result:
@@ -270,22 +238,5 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
         else:
             real_result.append(item)
         
-
+    
     return real_result
-
-
-file = CSVTimeSeriesFile(name = 'data.csv')
-
-print(compute_avg_monthly_difference(file.get_data(), '0', '2000'))
-
-
-#cose ancora da fare:
-'''
-Lasciarsi temmpo per consegnare
-commenti almeno i titoli e descrizioni delle funzioni
-altri check nella funzione
-
-se gli anni da considerare non esistono
-
-capire cosa fare se manca una data (nel time check e nel cuore del programma); se è fuori ordine va alzata un' eccezzione ma se manca penso che si possa calcolare comunque
-'''
