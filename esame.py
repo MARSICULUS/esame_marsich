@@ -7,9 +7,6 @@ Serve per leggere una classe CSV file
 
 ---attributi---
 self.name -> nome del file
-self.title -> intestazione del file
-self.righe -> numero di righe del file
-self.can_read -> se il file esiste ed è leggibile(non vuoto)
 
 ---metodi---
 __init__
@@ -19,36 +16,33 @@ __str__
     rappresentazione del file
     titolo, intestazione e numero di righe
 
-__conta_righe__
-    conta quante righe ci sono in un file
-    non conta righe vuote
-
 get_data
     ritorna una lista di liste, le liste più piccole contengono le righe nelle quali ogni elemento rappresenta una colonna
-
-get_dates
-    converte la lista di liste di get_data in una lista di liste, dove le date sono effettivamente l'oggetto datatime
 """
 class CSVFile:
 
-    def __init__(self, nome_file):
+    def __init__(self, name):
 
         #NOME del file
         #Controlo Se il nome è una stringa che finisce per .csv
-        if type(nome_file) == str and nome_file[-4:] == '.csv':
+        if type(name) == str and name[-4:] == '.csv':
             t_input = True
         else:
             t_input = False
 
         #setto il nome
-        self.name = nome_file
-
-        #CHECK:
-        #esistenza file, tipo file, file vuoto
+        self.name = name
         
         #se il tipo del file è corretto
         if not t_input:
             raise ExamException('Errore: il tipo del file non è .csv')
+
+    #Presentazione del file
+    def __str__(self):
+        return '[----------]\n{}\n[----------]'.format(self.name)
+
+    
+    def get_data(self):
 
         #controllo se il file esiste
         try:
@@ -57,36 +51,14 @@ class CSVFile:
         except Exception:
             raise ExamException('Errore: il file non può essere aperto (inesistente)')
 
-        #controllo se il file non è vuoto
-        if self.__conta_righe__() < 1:
-            raise ExamException('Errore: il file è vuoto')
-        
-
-        #TITOLO e RIGHE
-        #Quando il file si può leggere controllo se non è vuoto
-        #Apro il file e prendo il titolo
+        #provo ad aprirlo
         my_file = open(self.name, 'r')
-        titolo = my_file.readline().strip('\n')
+        #Controllo non sia vuoto
+        vuoto = [1 for line in my_file if line != '\n' ]
         my_file.close()
-        self.title = titolo
-        self.righe = self.__conta_righe__()
-
-             
-    #Presentazione del file
-    def __str__(self):
-        return '[----------]\n{}\n    {}\n    numero righe: {}\n'.format(self.name, self.title, self.righe)
-             
-
-    def __conta_righe__(self):
-        my_file = open(self.name, 'r')
-
-        #Creo una lista di 1 per ogni riga non vuota a partire dalla seconda
-        lst = [1 for i, line in enumerate(my_file) if i > 0 and line != '\n']
-
-        my_file.close()
-        return sum(lst)
-
-    def get_data(self):
+        #Se il file è vuoto raiso un Exception
+        if sum(vuoto) < 1:
+            raise ExamException('Errore: il file passato è vuoto')
 
         #Prendo tutti i dati così come sono tranne le righe vuote
         #Apro il file
@@ -193,7 +165,10 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
 
     #potrei fare almeno il time check
     #e qualche altro check
+    if not isinstance(first_year, str) or not isinstance(first_year, str):
+        raise ExamException('Errore: le date inserite non sono stringhe')
 
+    
     try:
         first_year = int(first_year)
         last_year = int(last_year)
@@ -298,30 +273,18 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
 # CORPO DEL PROGRAMMA
 #====================
 
-file = CSVTimeSeriesFile('shampoo_sales.csv')
+file = CSVTimeSeriesFile(name = 'file_vuoto.csv')
 #print(file.get_data())
-print(compute_avg_monthly_difference(file.get_data(), '1954', '1958'))
+print(compute_avg_monthly_difference(file.get_data(), '1950', '1952'))
 
 
 #cose ancora da fare:
 '''
-Lasciarsi temmpo per consegnarsi
-
+Lasciarsi temmpo per consegnare
 commenti almeno i titoli e descrizioni delle funzioni
-
-difference year = 0
-
-difference year reverse
-
 altri check nella funzione
 
-se consideriamo un intervallo di due anni, per il mese con la misurazione mancante verrà tornato come valore finale 0;
+se gli anni da considerare non esistono
 
-se consideriamo un intervallo di più di due anni e per un mese abbiamo meno di due misurazioni, verrà tornato 0 come valore finale per quel mese;
-
-se consideriamo un intervallo di più di due anni, calcoliamo la differenza media tra le misurazioni di quel mese per gli altri anni, ignorando la misurazione mancante.
-
-intervalli di tempo validi
-
-La classe CSVTimeSeriesFile controlla l’esistenza del file solo quando viene chiamato il metodo get_data() e, nel caso il file non esista o non sia leggibile, alza un'eccezione.
+capire cosa fare se manca una data (nel time check e nel cuore del programma); se è fuori ordine va alzata un' eccezzione ma se manca penso che si possa calcolare comunque
 '''
